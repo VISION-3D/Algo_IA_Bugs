@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte de Prix - Version Corrigée</title>
+<style>
+.pricing {
+  width: 300px;
+  margin: 20px auto;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Corrigé: box-shdow -> box-shadow */
+  padding: 30px 20px;
+  text-align: center; /* Amélioré: centré pour une meilleure apparence */
+  border-radius: 12px; /* Ajouté: coins arrondis modernes */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Ajouté: animations */
+}
+
+.pricing:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 24px; /* Amélioré: taille plus grande */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 32px; /* Amélioré: prix plus visible */
+  color: #27ae60; /* Amélioré: vert plus moderne */
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.features {
+  list-style: none;
+  padding-left: 0;
+  margin: 20px 0;
+}
+
+.features li {
+  padding: 8px 0; /* Amélioré: plus d'espace */
+  border-bottom: 1px solid #eee;
+  color: #666;
+  text-align: left; /* Amélioré: alignement à gauche pour la lisibilité */
+}
+
+.features li:last-child {
+  border-bottom: none; /* Amélioré: supprime la dernière bordure */
+}
+
+.features li:before {
+  content: "✓ "; /* Ajouté: icône de vérification */
+  color: #27ae60;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.btn {
+  background: linear-gradient(135deg, #3498db, #2980b9); /* Amélioré: gradient moderne */
+  color: white;
+  padding: 12px 24px; /* Amélioré: plus de padding */
+  border: none;
+  border-radius: 25px; /* Amélioré: bouton arrondi */
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer; /* Corrigé: ajout du curseur pointer */
+  transition: all 0.3s ease; /* Amélioré: transitions fluides */
+  width: 100%;
+}
+
+.btn:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b); /* Amélioré: gradient plus sombre */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+</style>
+</head>
+<body style="font-family: 'Arial', sans-serif; background-color: #f8f9fa; padding: 40px 0;">
+
+<div class="pricing">
+  <h2 class="title">Forfait de base</h2> <!-- Corrigé: balise fermante -->
+  <p class="price">9,99 $/mois</p>
+  
+  <ul class="features">
+    <li>1 Go de stockage</li>
+    <li>Assistance de base</li>
+    <li>Toutes les fonctionnalités principales</li>
+  </ul>
+  
+  <button class="btn" onclick="startTrial()">Démarrer l'essai</button> <!-- Amélioré: ajout d'une fonction -->
+</div>
+
+<script>
+function startTrial() {
+  alert('Essai gratuit démarré ! Redirection vers la page d\'inscription...');
+  // Ici, vous pourriez rediriger vers une vraie page d'inscription
+  // window.location.href = '/signup';
+}
+</script>
+
+</body>
+</html>

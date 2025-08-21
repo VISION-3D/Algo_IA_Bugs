@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test du Composant Carte de Prix</title>
+<style>
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+.test-section {
+  margin: 40px 0;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.test-section h3 {
+  color: #333;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
+}
+
+.pricing-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+
+.pricing-card {
+  width: 280px;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px 15px;
+  text-align: center;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #27ae60);
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card-price {
+  font-size: 28px;
+  color: #27ae60;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.card-features {
+  list-style: none;
+  padding-left: 0;
+  margin: 15px 0;
+  text-align: left;
+}
+
+.card-features li {
+  padding: 6px 0;
+  color: #666;
+  position: relative;
+  padding-left: 20px;
+  font-size: 14px;
+}
+
+.card-features li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.card-btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  margin-top: 15px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.card-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-2px);
+}
+
+.controls {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.controls button {
+  margin: 5px;
+  padding: 10px 15px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.controls button:hover {
+  background: #2980b9;
+}
+</style>
+</head>
+<body>
+
+<h1>Test du Composant Carte de Prix Réutilisable</h1>
+
+<div class="test-section">
+  <h3>Test 1: Configuration Simple</h3>
+  <div class="controls">
+    <button onclick="loadSimpleCards()">Charger cartes simples</button>
+    <button onclick="clearContainer('test1')">Vider</button>
+  </div>
+  <div class="pricing-container" id="test1"></div>
+</div>
+
+<div class="test-section">
+  <h3>Test 2: Configuration Avancée avec Plans Multiples</h3>
+  <div class="controls">
+    <button onclick="loadAdvancedCards()">Charger plans complets</button>
+    <button onclick="clearContainer('test2')">Vider</button>
+  </div>
+  <div class="pricing-container" id="test2"></div>
+</div>
+
+<div class="test-section">
+  <h3>Test 3: Cartes Personnalisées Dynamiques</h3>
+  <div class="controls">
+    <button onclick="createDynamicCard()">Créer carte aléatoire</button>
+    <button onclick="clearContainer('test3')">Vider</button>
+  </div>
+  <div class="pricing-container" id="test3"></div>
+</div>
+
+<script>
+// Classe PricingCard réutilisable
+class PricingCard {
+  constructor(config) {
+    this.title = config.title;
+    this.price = config.price;
+    this.currency = config.currency || '$';
+    this.period = config.period || '/mois';
+    this.features = config.features || [];
+    this.buttonText = config.buttonText || 'Choisir';
+    this.buttonAction = config.buttonAction || (() => {});
+  }
+
+  render() {
+    const cardElement = document.createElement('div');
+    cardElement.className = 'pricing-card';
+    
+    cardElement.innerHTML = `
+      <h2 class="card-title">${this.title}</h2>
+      <div class="card-price">
+        ${this.currency}${this.price}
+        <span style="font-size: 14px; color: #666;">${this.period}</span>
+      </div>
+      <ul class="card-features">
+        ${this.features.map(feature => `<li>${feature}</li>`).join('')}
+      </ul>
+      <button class="card-btn">${this.buttonText}</button>
+    `;
+
+    const button = cardElement.querySelector('.card-btn');
+    button.addEventListener('click', () => {
+      this.buttonAction(this.title, this.price);
+    });
+
+    return cardElement;
+  }
+}
+
+// Fonctions de test
+function loadSimpleCards() {
+  const container = document.getElementById('test1');
+  container.innerHTML = '';
+  
+  const simpleCard = new PricingCard({
+    title: 'Plan Basique',
+    price: '9.99',
+    features: ['1 Go stockage', 'Support email', 'Accès mobile'],
+    buttonAction: (title, price) => alert(`${title}: ${price}$/mois sélectionné!`)
+  });
+  
+  container.appendChild(simpleCard.render());
+}
+
+function loadAdvancedCards() {
+  const container = document.getElementById('test2');
+  container.innerHTML = '';
+  
+  const plans = [
+    {
+      title: 'Starter',
+      price: '5.00',
+      features: ['500 Mo stockage', 'Support communautaire'],
+      buttonText: 'Commencer',
+      buttonAction: (title, price) => alert(`Bienvenue au plan ${title}!`)
+    },
+    {
+      title: 'Pro',
+      price: '15.00',
+      features: ['5 Go stockage', 'Support prioritaire', 'API accès'],
+      buttonText: 'Upgrader',
+      buttonAction: (title, price) => alert(`Excellent choix: ${title}!`)
+    },
+    {
+      title: 'Enterprise',
+      price: '50.00',
+      features: ['Stockage illimité', 'Support 24/7', 'Fonctionnalités avancées'],
+      buttonText: 'Contacter',
+      buttonAction: (title, price) => alert(`Parlons de vos besoins enterprise!`)
+    }
+  ];
+  
+  plans.forEach(planConfig => {
+    const card = new PricingCard(planConfig);
+    container.appendChild(card.render());
+  });
+}
+
+function createDynamicCard() {
+  const container = document.getElementById('test3');
+  
+  const randomTitles = ['Plan Alpha', 'Plan Beta', 'Plan Gamma', 'Plan Premium'];
+  const randomPrices = ['12.99', '24.99', '39.99', '99.99'];
+  const randomFeatures = [
+    ['Fonctionnalité A', 'Fonctionnalité B'],
+    ['Option 1', 'Option 2', 'Option 3'],
+    ['Service Premium', 'Accès VIP'],
+    ['Tout inclus', 'Support premium', 'Accès beta']
+  ];
+  
+  const randomIndex = Math.floor(Math.random() * randomTitles.length);
+  
+  const dynamicCard = new PricingCard({
+    title: randomTitles[randomIndex],
+    price: randomPrices[randomIndex],
+    features: randomFeatures[randomIndex],
+    buttonText: 'Tester',
+    buttonAction: (title, price) => alert(`Carte dynamique créée: ${title} - ${price}$/mois`)
+  });
+  
+  container.appendChild(dynamicCard.render());
+}
+
+function clearContainer(containerId) {
+  document.getElementById(containerId).innerHTML = '';
+}
+
+// Charger un exemple au démarrage
+document.addEventListener('DOMContentLoaded', () => {
+  loadSimpleCards();
+});
+</script>
+
+</body>
+</html>
