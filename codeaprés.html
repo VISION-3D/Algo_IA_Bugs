@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Cards</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .pricing {
+      width: 300px;
+      background-color: #fff;
+      box-shadow: 0 0 10px #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .pricing:hover {
+      transform: scale(1.05);
+    }
+
+    .title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 18px;
+      color: green;
+      margin-bottom: 15px;
+    }
+
+    .features {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 15px;
+    }
+
+    .features li {
+      padding: 6px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .btn {
+      background: blue;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: darkblue;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ici la carte sera injectée en JS -->
+
+  <script>
+    function createPricingCard(title, price, features) {
+      const card = document.createElement("div");
+      card.className = "pricing";
+
+      card.innerHTML = `
+        <h2 class="title">${title}</h2>
+        <p class="price">${price}</p>
+        <ul class="features">
+          ${features.map(f => `<li>${f}</li>`).join("")}
+        </ul>
+        <button class="btn">Démarrer l'essai</button>
+      `;
+
+      document.body.appendChild(card);
+    }
+
+    // Exemple d’utilisation :
+    createPricingCard("Forfait de base", "9,99 $/mois", [
+      "1 Go de stockage",
+      "Assistance de base",
+      "Toutes les fonctionnalités principales"
+    ]);
+
+    createPricingCard("Forfait Premium", "19,99 $/mois", [
+      "10 Go de stockage",
+      "Assistance prioritaire",
+      "Fonctionnalités avancées"
+    ]);
+  </script>
+</body>
+</html>
