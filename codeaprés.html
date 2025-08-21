@@ -3,103 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing Cards</title>
+  <title>Cartes de Prix Réutilisables</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f9;
-      padding: 20px;
+    /* Conteneur des cartes : flex pour aligner les cartes horizontalement */
+    .pricing-container {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 15px; /*  réduit l’espace entre les cartes (au lieu de 20px) */
+      margin: 20px;
+      flex-wrap: wrap; /* Permet de passer en ligne suivante si l’écran est petit */
     }
 
-    .pricing {
+    /* Style général d'une carte de prix */
+    .pricing-card {
       width: 300px;
       background-color: #fff;
       box-shadow: 0 0 10px #ccc;
-      border-radius: 10px;
       padding: 20px;
-      text-align: center;
-      transition: transform 0.2s ease;
+      text-align: left;
+      border-radius: 8px;
+      transition: transform 0.2s;
     }
 
-    .pricing:hover {
-      transform: scale(1.05);
+    /* Effet hover pour donner du relief */
+    .pricing-card:hover {
+      transform: scale(1.03);
     }
 
-    .title {
+    /* Titre du plan */
+    .pricing-card .title {
       font-size: 22px;
       font-weight: bold;
       margin-bottom: 10px;
     }
 
-    .price {
+    /* Prix du plan */
+    .pricing-card .price {
       font-size: 18px;
       color: green;
       margin-bottom: 15px;
     }
 
-    .features {
+    /* Liste des fonctionnalités */
+    .pricing-card .features {
       list-style: none;
-      padding: 0;
-      margin: 0 0 15px;
+      padding-left: 0;
+      margin-bottom: 15px;
     }
 
-    .features li {
-      padding: 6px;
+    .pricing-card .features li {
+      padding: 4px;
       border-bottom: 1px solid #eee;
     }
 
-    .btn {
+    /* Bouton d'action */
+    .pricing-card .btn {
       background: blue;
       color: white;
       padding: 10px 20px;
       border: none;
-      border-radius: 5px;
-      margin-top: 10px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      border-radius: 5px;
     }
 
-    .btn:hover {
+    /* Effet hover sur bouton */
+    .pricing-card .btn:hover {
       background: darkblue;
     }
   </style>
 </head>
 <body>
 
-  <!-- Ici la carte sera injectée en JS -->
+  <div class="pricing-container">
+    <!-- Première carte -->
+    <div class="pricing-card">
+      <h2 class="title">Forfait de base</h2>
+      <p class="price">9,99 $/mois</p>
+      <ul class="features">
+        <li>1 Go de stockage</li>
+        <li>Assistance de base</li>
+        <li>Toutes les fonctionnalités principales</li>
+      </ul>
+      <button class="btn">Démarrer l'essai</button>
+    </div>
 
-  <script>
-    function createPricingCard(title, price, features) {
-      const card = document.createElement("div");
-      card.className = "pricing";
+    <!-- Deuxième carte -->
+    <div class="pricing-card">
+      <h2 class="title">Forfait Premium</h2>
+      <p class="price">19,99 $/mois</p>
+      <ul class="features">
+        <li>10 Go de stockage</li>
+        <li>Assistance prioritaire</li>
+        <li>Accès complet</li>
+      </ul>
+      <button class="btn">Choisir</button>
+    </div>
+  </div>
 
-      card.innerHTML = `
-        <h2 class="title">${title}</h2>
-        <p class="price">${price}</p>
-        <ul class="features">
-          ${features.map(f => `<li>${f}</li>`).join("")}
-        </ul>
-        <button class="btn">Démarrer l'essai</button>
-      `;
-
-      document.body.appendChild(card);
-    }
-
-    // Exemple d’utilisation :
-    createPricingCard("Forfait de base", "9,99 $/mois", [
-      "1 Go de stockage",
-      "Assistance de base",
-      "Toutes les fonctionnalités principales"
-    ]);
-
-    createPricingCard("Forfait Premium", "19,99 $/mois", [
-      "10 Go de stockage",
-      "Assistance prioritaire",
-      "Fonctionnalités avancées"
-    ]);
-  </script>
 </body>
 </html>
