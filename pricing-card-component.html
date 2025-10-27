@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Composant Carte de Prix Réutilisable</title>
+<style>
+.pricing-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+.pricing-card {
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px 20px;
+  text-align: center;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3498db, #27ae60);
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+}
+
+.pricing-card.featured {
+  border: 2px solid #f39c12;
+  transform: scale(1.05);
+}
+
+.pricing-card.featured::before {
+  background: linear-gradient(90deg, #f39c12, #e74c3c);
+}
+
+.featured-badge {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: #f39c12;
+  color: white;
+  padding: 5px 40px;
+  font-size: 12px;
+  font-weight: bold;
+  transform: rotate(45deg);
+  text-transform: uppercase;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.card-price {
+  font-size: 32px;
+  color: #27ae60;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.card-price .currency {
+  font-size: 18px;
+  vertical-align: top;
+}
+
+.card-price .period {
+  font-size: 16px;
+  color: #666;
+  font-weight: normal;
+}
+
+.card-features {
+  list-style: none;
+  padding-left: 0;
+  margin: 20px 0;
+}
+
+.card-features li {
+  padding: 8px 0;
+  color: #666;
+  text-align: left;
+  position: relative;
+  padding-left: 25px;
+}
+
+.card-features li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.card-features li.unavailable {
+  color: #ccc;
+  text-decoration: line-through;
+}
+
+.card-features li.unavailable:before {
+  content: "✗";
+  color: #e74c3c;
+}
+
+.card-btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 25px;
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card-btn:hover {
+  background: linear-gradient(135deg, #2980b9, #1f5f8b);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+.card-btn:active {
+  transform: translateY(0);
+}
+
+.card-btn.premium {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.card-btn.premium:hover {
+  background: linear-gradient(135deg, #e67e22, #d35400);
+  box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4);
+}
+</style>
+</head>
+<body>
+
+<div class="pricing-container" id="pricing-container">
+  <!-- Les cartes seront générées dynamiquement ici -->
+</div>
+
+<script>
+class PricingCard {
+  constructor(config) {
+    this.title = config.title;
+    this.price = config.price;
+    this.currency = config.currency || '$';
+    this.period = config.period || '/mois';
+    this.features = config.features || [];
+    this.buttonText = config.buttonText || 'Choisir ce plan';
+    this.buttonAction = config.buttonAction || (() => {});
+    this.featured = config.featured || false;
+    this.unavailableFeatures = config.unavailableFeatures || [];
+  }
+
+  render() {
+    const cardElement = document.createElement('div');
+    cardElement.className = `pricing-card ${this.featured ? 'featured' : ''}`;
+    
+    cardElement.innerHTML = `
+      ${this.featured ? '<div class="featured-badge">Populaire</div>' : ''}
+      <h2 class="card-title">${this.title}</h2>
+      <div class="card-price">
+        <span class="currency">${this.currency}</span>${this.price}
+        <span class="period">${this.period}</span>
+      </div>
+      <ul class="card-features">
+        ${this.features.map(feature => `
+          <li class="${this.unavailableFeatures.includes(feature) ? 'unavailable' : ''}">${feature}</li>
+        `).join('')}
+      </ul>
+      <button class="card-btn ${this.featured ? 'premium' : ''}">${this.buttonText}</button>
+    `;
+
+    // Ajouter l'événement click au bouton
+    const button = cardElement.querySelector('.card-btn');
+    button.addEventListener('click', () => {
+      this.buttonAction(this.title, this.price);
+    });
+
+    return cardElement;
+  }
+
+  static renderMultiple(cards, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    
+    cards.forEach(cardConfig => {
+      const card = new PricingCard(cardConfig);
+      container.appendChild(card.render());
+    });
+  }
+}
+
+// Configuration des cartes de prix
+const pricingPlans = [
+  {
+    title: 'Forfait Basique',
+    price: '9.99',
+    currency: '$',
+    period: '/mois',
+    features: [
+      '1 Go de stockage',
+      'Assistance par email',
+      'Fonctionnalités de base',
+      'Accès mobile'
+    ],
+    unavailableFeatures: [],
+    buttonText: 'Commencer',
+    buttonAction: (title, price) => {
+      alert(`Vous avez choisi le ${title} à ${price}$/mois`);
+    }
+  },
+  {
+    title: 'Forfait Pro',
+    price: '19.99',
+    currency: '$',
+    period: '/mois',
+    features: [
+      '10 Go de stockage',
+      'Assistance prioritaire',
+      'Toutes les fonctionnalités',
+      'Accès mobile et desktop',
+      'Analyses avancées',
+      'Intégrations API'
+    ],
+    unavailableFeatures: [],
+    featured: true,
+    buttonText: 'Choisir Pro',
+    buttonAction: (title, price) => {
+      alert(`Excellent choix ! ${title} à ${price}$/mois avec 30 jours d'essai gratuit`);
+    }
+  },
+  {
+    title: 'Forfait Entreprise',
+    price: '49.99',
+    currency: '$',
+    period: '/mois',
+    features: [
+      'Stockage illimité',
+      'Support 24/7',
+      'Fonctionnalités enterprise',
+      'Multi-plateforme',
+      'Analyses personnalisées',
+      'API complète',
+      'Sécurité avancée',
+      'Formation dédiée'
+    ],
+    unavailableFeatures: [],
+    buttonText: 'Contactez-nous',
+    buttonAction: (title, price) => {
+      alert(`Parlons de vos besoins enterprise ! ${title} à partir de ${price}$/mois`);
+    }
+  }
+];
+
+// Générer les cartes au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+  PricingCard.renderMultiple(pricingPlans, 'pricing-container');
+});
+
+// Fonction utilitaire pour créer une carte personnalisée
+function createCustomCard(title, price, features, options = {}) {
+  const cardConfig = {
+    title,
+    price,
+    features,
+    ...options
+  };
+  
+  return new PricingCard(cardConfig);
+}
+
+// Exemple d'utilisation de la fonction utilitaire
+// const customCard = createCustomCard(
+//   'Plan Personnalisé',
+//   '29.99',
+//   ['Fonctionnalité 1', 'Fonctionnalité 2'],
+//   { featured: true, buttonText: 'Essayer maintenant' }
+// );
+</script>
+
+</body>
+</html>
